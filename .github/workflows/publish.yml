@@ -1,17 +1,21 @@
-name: Publish to PyPI
+name: Manual Publish / Build
 
 on:
-  push:
-    branches:
-      - main
-  release:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      run_build_check:
+        description: "Run build/install smoke before publish"
+        required: false
+        default: "true"
+      publish_to_pypi:
+        description: "Actually publish to PyPI"
+        required: false
+        default: "false"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Only publish to PyPI on release
-    if: github.event_name == 'release'
+    if: ${{ inputs.publish_to_pypi == 'true' }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -35,8 +39,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    # Run tests on every push to main
-    if: github.event_name == 'push'
+    if: ${{ inputs.run_build_check == 'true' }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
