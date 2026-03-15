@@ -5,10 +5,23 @@ from typing import Any, Callable, Dict, List, Optional, Sequence
 import requests
 
 def get_api_key() -> str:
-    """Get the Amap Maps API key from environment variables"""
+    """Get the Amap Maps API key from environment variables."""
     api_key = os.getenv("AMAP_MAPS_API_KEY")
     if not api_key:
-        raise ValueError("AMAP_MAPS_API_KEY environment variable is required")
+        message = "\n".join([
+            "❌ Missing required credential: AMAP_MAPS_API_KEY",
+            "",
+            "To get your Amap Maps API Key:",
+            "  1. Visit https://console.amap.com/ → Create application",
+            "  2. Add a 'Web Service' key type",
+            "  3. Copy the generated API Key",
+            "",
+            "Provide via environment variable:",
+            "  export AMAP_MAPS_API_KEY=your_key_here",
+            "",
+            "📖 Amap docs: https://lbs.amap.com/api/webservice/guide/create-project/get-key",
+        ])
+        raise ValueError(message)
     return api_key
 
 @dataclass(frozen=True)
